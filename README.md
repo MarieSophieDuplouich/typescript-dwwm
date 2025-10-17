@@ -1,3 +1,6 @@
+cdpi-dwwm/Phase 2 - MVC REST et SPA/2. OOP TypeScript/Cours/1. Sans POO
+/1.Synopsis.md
+
 La POO par l'exemple - EarthDefender
 Pour apprendre la POO nous allons conçevoir un petit jeu vidéo nommé EarthDefender.
 
