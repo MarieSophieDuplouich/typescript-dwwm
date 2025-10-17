@@ -124,6 +124,7 @@ function main() {
             x: Math.random() * 500,
             y: 0
         };
+        context.drawImage(alienImg, alienPosition1.x, alienPosition1.y, alienImg.width, alienImg.height);
         var alienPosition2 = {
             x: Math.random() * 500,
             y: 0

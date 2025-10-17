@@ -175,6 +175,13 @@ function main() {
             y: 0
         };
 
+           context.drawImage(
+            alienImg,
+           alienPosition1.x,
+           alienPosition1.y,
+            alienImg.width,
+            alienImg.height
+        );
 
         const alienPosition2 = {
             x: Math.random() * 500,
