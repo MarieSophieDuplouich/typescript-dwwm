@@ -8,6 +8,7 @@
     <style>
         canvas {
             border: black solid 1px;
+            width: 100%;
         }
     </style>
 
@@ -18,10 +19,36 @@
 <img src="./public/images/Alien666.png" alt="alien" class="alien" hidden>
 <img src="./public/images/Player.png" alt="player" class="player" hidden>
 <img src="./public/images/Star.png" alt="star" class="star" hidden>
+<img src="./public/images/missile.png" alt="missile" class="missile" hidden>
+<img src="./public/images/Sprite.png" alt="sol" class="sol" hidden>
+<img src="./public/images/vie.png" alt="vie"class="vie"hidden>
+
     <canvas>
 
     </canvas>
+ 
+<audio id="bg-music" loop>
+  <source src="./public/images/Ian Post - 8 Bit Samba.mp3" type="audio/mp3">
+  Votre navigateur ne supporte pas l'audio.
+</audio>
+   <script>
+        // Démarrage de la musique au premier clic ou touche
+        const bgMusic = document.getElementById('bg-music');
+        function startMusic() {
+            if (bgMusic.paused) {
+                bgMusic.volume = 0.5; // ajuster le volume
+                bgMusic.play();
+            }
+            document.removeEventListener('keydown', startMusic);
+            document.removeEventListener('click', startMusic);
+        }
+        document.addEventListener('keydown', startMusic);
+        document.addEventListener('click', startMusic);
+    </script>
 </body>
+
 <script type="module" src="./build/script.js"></script>
 
 </html>
+
+<!-- Où mettre le sol fixe qui s'appelle sprite ? où mettre l'image missile de mon vaisseau dans le code ? -->

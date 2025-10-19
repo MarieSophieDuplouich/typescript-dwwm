@@ -1,8 +1,13 @@
 {
-    "compilerOptions": {
-        "rootDir": "./src", // Les fichiers à compiler sont dans ./src
-        "outDir": "./build",    // Les fichiers JavaScript compilés seront dans ./build
-        "module": "ESNext"  /* Le JavaScript généré lors de la compilation utilise
-         la norme ECMAScript la plus récente.*/
-    }
+  "compilerOptions": {
+    "target": "es2016",               // ✅ Active les fonctionnalités modernes (includes, etc.)
+    "lib": ["dom", "es2016"],         // ✅ Autorise les APIs du navigateur et ES2016+
+    "module": "ESNext",               // Conserve ton choix
+    "rootDir": "./src",               // Source du code TypeScript
+    "outDir": "./build",              // Destination des fichiers compilés
+    "strict": true,                   // (Optionnel mais conseillé : active les vérifications strictes)
+    "esModuleInterop": true,          // (Optionnel : facilite l’importation de modules CommonJS)
+    "forceConsistentCasingInFileNames": true, // (Optionnel : évite les erreurs de casse)
+    "skipLibCheck": true              // (Optionnel : accélère la compilation)
+  }
 }
