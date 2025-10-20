@@ -388,11 +388,11 @@ window.onload = main;
 function main() {
     const CANVAS_WIDTH = 900;
     const CANVAS_HEIGHT = 500;
-
     const canvas = document.querySelector("canvas") as HTMLCanvasElement;
     const context = canvas.getContext("2d")!;
     canvas.width = CANVAS_WIDTH;
     canvas.height = CANVAS_HEIGHT;
+
 
     // --- Chargement des images --- //
     const alienImg: HTMLImageElement = document.querySelector("img.alien")!;
@@ -400,7 +400,8 @@ function main() {
     const starImage: HTMLImageElement = document.querySelector("img.star")!;
     const groundImg: HTMLImageElement = document.querySelector("img.sol")!;
     const missileImg: HTMLImageElement = document.querySelector("img.missile")!;
-    const ennemiKilled: HTMLImageElement = document.querySelector("ennemi-killed")!;   
+    const ennemiKilled: HTMLImageElement = document.querySelector("ennemi-killed")!;
+
 
     // --- Variables de jeu --- //
     type Direction = -1 | 0 | 1;
@@ -480,7 +481,7 @@ function main() {
         }
 
         // Si plus de vie pour la Terre Game over
-             if (earthLives <= 0) {
+        if (earthLives <= 0) {
             gameOver = true;
             context.fillStyle = "white";
             context.font = "bold 50px Arial";
@@ -491,10 +492,10 @@ function main() {
             return; // stoppe l’affichage
         }
 
-              //Si 15 ennemis  tués le joueur passe devant le boss ça après
+        //Si 15 ennemis  tués le joueur passe devant le boss ça après
 
-          // Si plus de vie des ennemis le joueur gagne
-             if (ennemiSkilledlive<= 0) {
+        // Si plus de vie des ennemis le joueur gagne
+        if (ennemiSkilledlive <= 0) {
             gameOver = true;
             context.fillStyle = "white";
             context.font = "bold 50px Arial";
@@ -521,7 +522,7 @@ function main() {
 
             // Collision alien ↔ sol
             if (alien.position.y + alien.image.height >= ground.position.y) {
-               earthLives = Math.max(0,earthLives - 1);
+                earthLives = Math.max(0, earthLives - 1);
                 alien.position.y = -alien.image.height;
                 alien.position.x = Math.random() * (CANVAS_WIDTH - alien.image.width);
             }
@@ -542,7 +543,10 @@ function main() {
                 }
             }
         }
-  
+
+
+
+
 
         // Missiles
         for (let i = missiles.length - 1; i >= 0; i--) {
@@ -560,7 +564,12 @@ function main() {
             if (missile.position.y + missile.image.height < 0) {
                 missiles.splice(i, 1);
             }
+
+
         }
+
+
+
 
         // Affichage des vies ("10 ❤️")
         context.fillStyle = "white";
@@ -568,17 +577,17 @@ function main() {
         context.textAlign = "center";
         context.fillText(`${livesPlayer} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
 
-         // Affichage des 3 vies de  la Terre ("3 🌍")
+        // Affichage des 3 vies de  la Terre ("3 🌍")
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "right";
-        context.fillText(`${earthLives} 🌍`,  340, 430);
+        context.fillText(`${earthLives} 🌍`, 340, 430);
 
-         // Affichage des 15 vies des aliens ("15 🌍")
+        // Affichage des 15 vies des aliens ("15 🌍")
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "right";
-         context.fillText(`${ennemiSkilledlive} 👽`,  100, 70);
+        context.fillText(`${ennemiSkilledlive} 👽`, 100, 70);
         //  context.drawImage(
         //     ennemiKilled,
         //     ennemiKilled.width,
@@ -586,8 +595,8 @@ function main() {
         //  );
 
         // ennemis killed lives position
-        
-        
+
+
         // Joueur
         playerPos.x += 10 * direction;
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
@@ -601,8 +610,26 @@ function main() {
         );
 
     }, 30);
-         
-    // --- Gestion des touches --- //
+
+    // --- Gestion des touches --- /
+
+
+    // quand je tire un missile la musique s'active
+
+    const shootMusicsound = document.getElementById('shoot-music') as HTMLAudioElement;
+    function shootMusiques() {
+        if (shootMusicsound.paused) {
+            shootMusicsound.currentTime = 0;
+            shootMusicsound.volume = 0.5;
+            shootMusicsound.play();
+        } else {
+
+            shootMusicsound.currentTime = 0;
+        }
+
+        document.addEventListener('keydown', shootMusiques);
+    }
+
     document.addEventListener("keydown", (event) => {
         if (gameOver) return; // Bloque le contrôle après game over
 
@@ -624,6 +651,7 @@ function main() {
                         y: playerPos.y - missileImg.height
                     }
                 ));
+                shootMusiques();
                 break;
         }
     });
@@ -634,6 +662,10 @@ function main() {
         }
     });
 }
+
+
+
+
 
 // --- Détection de collision rectangle --- //
 function isColliding(a: GameObject, b: GameObject): boolean {

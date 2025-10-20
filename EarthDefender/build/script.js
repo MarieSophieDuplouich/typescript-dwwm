@@ -465,7 +465,20 @@ function main() {
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
         context.drawImage(playerImg, playerPos.x, playerPos.y, playerImg.width, playerImg.height);
     }, 30);
-    // --- Gestion des touches --- //
+    // --- Gestion des touches --- /
+    // quand je tire un missile la musique s'active
+    const shootMusicsound = document.getElementById('shoot-music');
+    function shootMusiques() {
+        if (shootMusicsound.paused) {
+            shootMusicsound.currentTime = 0;
+            shootMusicsound.volume = 0.5;
+            shootMusicsound.play();
+        }
+        else {
+            shootMusicsound.currentTime = 0;
+        }
+        document.addEventListener('keydown', shootMusiques);
+    }
     document.addEventListener("keydown", (event) => {
         if (gameOver)
             return; // Bloque le contrôle après game over
@@ -484,6 +497,7 @@ function main() {
                     x: playerPos.x + playerImg.width / 2 - missileImg.width / 2,
                     y: playerPos.y - missileImg.height
                 }));
+                shootMusiques();
                 break;
         }
     });
