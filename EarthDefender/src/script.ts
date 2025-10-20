@@ -400,6 +400,7 @@ function main() {
     const starImage: HTMLImageElement = document.querySelector("img.star")!;
     const groundImg: HTMLImageElement = document.querySelector("img.sol")!;
     const missileImg: HTMLImageElement = document.querySelector("img.missile")!;
+    const ennemiKilled: HTMLImageElement = document.querySelector("ennemi-killed")!;   
 
     // --- Variables de jeu --- //
     type Direction = -1 | 0 | 1;
@@ -422,7 +423,7 @@ function main() {
     const missiles: GameObject[] = [];
 
     // Génération initiale d’aliens
-    const nbAliens = 8;
+    const nbAliens = 10;
     for (let i = 0; i < nbAliens; i++) {
         aliens.push(new GameObject(alienImg, {
             x: Math.random() * (CANVAS_WIDTH - alienImg.width),
@@ -431,7 +432,13 @@ function main() {
     }
 
     // Vies de la Terre
-    let earthLives = 10;
+    let earthLives = 3;
+
+    //vies du joueur
+
+    let livesPlayer = 10;
+    // Il faut en tuer 15 pour gagner
+    let ennemiSkilledlive = 15;
 
     // --- Boucle de jeu --- //
     setInterval(() => {
@@ -461,7 +468,7 @@ function main() {
         );
 
         // Si plus de vies → afficher Game Over
-        if (earthLives <= 0) {
+        if (livesPlayer <= 0) {
             gameOver = true;
             context.fillStyle = "white";
             context.font = "bold 50px Arial";
@@ -471,6 +478,34 @@ function main() {
             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
             return; // stoppe l’affichage
         }
+
+        // Si plus de vie pour la Terre Game over
+             if (earthLives <= 0) {
+            gameOver = true;
+            context.fillStyle = "white";
+            context.font = "bold 50px Arial";
+            context.textAlign = "center";
+            context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+            context.font = "24px Arial";
+            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+            return; // stoppe l’affichage
+        }
+
+              //Si 15 ennemis  tués le joueur passe devant le boss ça après
+
+          // Si plus de vie des ennemis le joueur gagne
+             if (ennemiSkilledlive<= 0) {
+            gameOver = true;
+            context.fillStyle = "white";
+            context.font = "bold 50px Arial";
+            context.textAlign = "center";
+            context.fillText("🪖  Humans win ! 🪖 ", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+            context.font = "24px Arial";
+            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+            return; // stoppe l’affichage
+        }
+
+
 
         // Aliens
         for (let i = aliens.length - 1; i >= 0; i--) {
@@ -486,7 +521,7 @@ function main() {
 
             // Collision alien ↔ sol
             if (alien.position.y + alien.image.height >= ground.position.y) {
-                earthLives = Math.max(0, earthLives - 1);
+               earthLives = Math.max(0,earthLives - 1);
                 alien.position.y = -alien.image.height;
                 alien.position.x = Math.random() * (CANVAS_WIDTH - alien.image.width);
             }
@@ -507,6 +542,7 @@ function main() {
                 }
             }
         }
+  
 
         // Missiles
         for (let i = missiles.length - 1; i >= 0; i--) {
@@ -530,8 +566,28 @@ function main() {
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "center";
-        context.fillText(`${earthLives} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
+        context.fillText(`${livesPlayer} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
 
+         // Affichage des 3 vies de  la Terre ("3 🌍")
+        context.fillStyle = "white";
+        context.font = "24px Arial";
+        context.textAlign = "right";
+        context.fillText(`${earthLives} 🌍`,  340, 430);
+
+         // Affichage des 15 vies des aliens ("15 🌍")
+        context.fillStyle = "white";
+        context.font = "24px Arial";
+        context.textAlign = "right";
+         context.fillText(`${ennemiSkilledlive} 👽`,  100, 70);
+        //  context.drawImage(
+        //     ennemiKilled,
+        //     ennemiKilled.width,
+        //     ennemiKilled.height
+        //  );
+
+        // ennemis killed lives position
+        
+        
         // Joueur
         playerPos.x += 10 * direction;
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
@@ -545,7 +601,7 @@ function main() {
         );
 
     }, 30);
-
+         
     // --- Gestion des touches --- //
     document.addEventListener("keydown", (event) => {
         if (gameOver) return; // Bloque le contrôle après game over

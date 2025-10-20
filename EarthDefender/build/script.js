@@ -330,6 +330,7 @@ function main() {
     const starImage = document.querySelector("img.star");
     const groundImg = document.querySelector("img.sol");
     const missileImg = document.querySelector("img.missile");
+    const ennemiKilled = document.querySelector("ennemi-killed");
     let direction = 0;
     let gameOver = false;
     const playerPos = {
@@ -342,7 +343,7 @@ function main() {
     const aliens = [];
     const missiles = [];
     // Génération initiale d’aliens
-    const nbAliens = 8;
+    const nbAliens = 10;
     for (let i = 0; i < nbAliens; i++) {
         aliens.push(new GameObject(alienImg, {
             x: Math.random() * (CANVAS_WIDTH - alienImg.width),
@@ -350,7 +351,11 @@ function main() {
         }));
     }
     // Vies de la Terre
-    let earthLives = 10;
+    let earthLives = 3;
+    //vies du joueur
+    let livesPlayer = 10;
+    // Il faut en tuer 15 pour gagner
+    let ennemiSkilledlive = 15;
     // --- Boucle de jeu --- //
     setInterval(() => {
         // Nettoyer le canvas
@@ -364,12 +369,35 @@ function main() {
         // Sol
         context.drawImage(ground.image, ground.position.x, ground.position.y, ground.image.width, ground.image.height);
         // Si plus de vies → afficher Game Over
+        if (livesPlayer <= 0) {
+            gameOver = true;
+            context.fillStyle = "white";
+            context.font = "bold 50px Arial";
+            context.textAlign = "center";
+            context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+            context.font = "24px Arial";
+            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+            return; // stoppe l’affichage
+        }
+        // Si plus de vie pour la Terre Game over
         if (earthLives <= 0) {
             gameOver = true;
             context.fillStyle = "white";
             context.font = "bold 50px Arial";
             context.textAlign = "center";
             context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+            context.font = "24px Arial";
+            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+            return; // stoppe l’affichage
+        }
+        //Si 15 ennemis  tués le joueur passe devant le boss ça après
+        // Si plus de vie des ennemis le joueur gagne
+        if (ennemiSkilledlive <= 0) {
+            gameOver = true;
+            context.fillStyle = "white";
+            context.font = "bold 50px Arial";
+            context.textAlign = "center";
+            context.fillText("🪖  Humans win ! 🪖 ", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
             context.font = "24px Arial";
             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
             return; // stoppe l’affichage
@@ -415,7 +443,23 @@ function main() {
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "center";
-        context.fillText(`${earthLives} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
+        context.fillText(`${livesPlayer} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
+        // Affichage des 3 vies de  la Terre ("3 🌍")
+        context.fillStyle = "white";
+        context.font = "24px Arial";
+        context.textAlign = "right";
+        context.fillText(`${earthLives} 🌍`, 340, 430);
+        // Affichage des 15 vies des aliens ("15 🌍")
+        context.fillStyle = "white";
+        context.font = "24px Arial";
+        context.textAlign = "right";
+        context.fillText(`${ennemiSkilledlive} 👽`, 100, 70);
+        //  context.drawImage(
+        //     ennemiKilled,
+        //     ennemiKilled.width,
+        //     ennemiKilled.height
+        //  );
+        // ennemis killed lives position
         // Joueur
         playerPos.x += 10 * direction;
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
