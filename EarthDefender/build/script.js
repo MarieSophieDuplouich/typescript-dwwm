@@ -390,7 +390,6 @@ function main() {
             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
             return; // stoppe l’affichage
         }
-        //Si 15 ennemis  tués le joueur passe devant le boss ça après
         // Si plus de vie des ennemis le joueur gagne
         if (ennemiSkilledlive <= 0) {
             gameOver = true;
@@ -449,17 +448,20 @@ function main() {
         context.font = "24px Arial";
         context.textAlign = "right";
         context.fillText(`${earthLives} 🌍`, 340, 430);
-        // Affichage des 15 vies des aliens ("15 🌍")
+        // ennemis killed lives position
+        //Si 15 ennemis  tués le joueur passe devant le boss ça après
+        // context.drawImage(
+        //     ennemiKilled.image,
+        //     ennemiKilled.position.x,
+        //     ennemiKilled.position.y,
+        //     ennemiKilled.image.width,
+        //     ennemiKilled.image.height
+        // );
+        // Affichage des 15 vies des aliens ("15 👽 ")
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "right";
-        context.fillText(`${ennemiSkilledlive} 👽`, 100, 70);
-        //  context.drawImage(
-        //     ennemiKilled,
-        //     ennemiKilled.width,
-        //     ennemiKilled.height
-        //  );
-        // ennemis killed lives position
+        context.fillText(`${ennemiSkilledlive} ennemiKilled`, 100, 70);
         // Joueur
         playerPos.x += 10 * direction;
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));

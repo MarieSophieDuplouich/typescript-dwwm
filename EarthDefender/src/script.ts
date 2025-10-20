@@ -403,6 +403,8 @@ function main() {
     const ennemiKilled: HTMLImageElement = document.querySelector("ennemi-killed")!;
 
 
+
+
     // --- Variables de jeu --- //
     type Direction = -1 | 0 | 1;
     let direction: Direction = 0;
@@ -448,6 +450,7 @@ function main() {
         context.fillStyle = "#141414";
         context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
+
         // Fond étoilé
         for (let i = 0; i < 30; i++) {
             context.drawImage(
@@ -492,7 +495,7 @@ function main() {
             return; // stoppe l’affichage
         }
 
-        //Si 15 ennemis  tués le joueur passe devant le boss ça après
+   
 
         // Si plus de vie des ennemis le joueur gagne
         if (ennemiSkilledlive <= 0) {
@@ -583,20 +586,26 @@ function main() {
         context.textAlign = "right";
         context.fillText(`${earthLives} 🌍`, 340, 430);
 
-        // Affichage des 15 vies des aliens ("15 🌍")
+
+             // ennemis killed lives position
+            //Si 15 ennemis  tués le joueur passe devant le boss ça après
+        // context.drawImage(
+        //     ennemiKilled.image,
+        //     ennemiKilled.position.x,
+        //     ennemiKilled.position.y,
+        //     ennemiKilled.image.width,
+        //     ennemiKilled.image.height
+        // );
+
+
+        // Affichage des 15 vies des aliens ("15 👽 ")
         context.fillStyle = "white";
         context.font = "24px Arial";
         context.textAlign = "right";
-        context.fillText(`${ennemiSkilledlive} 👽`, 100, 70);
-        //  context.drawImage(
-        //     ennemiKilled,
-        //     ennemiKilled.width,
-        //     ennemiKilled.height
-        //  );
+        context.fillText(`${ennemiSkilledlive} ennemiKilled`, 100, 70);
+        
 
-        // ennemis killed lives position
-
-
+   
         // Joueur
         playerPos.x += 10 * direction;
         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
