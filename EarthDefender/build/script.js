@@ -304,215 +304,310 @@
 // }
 // }
 // --- CLASS GAMEOBJECT --- //
-class GameObject {
-    constructor(image, position) {
-        this.image = image;
-        this.position = position;
-        this.width = image.width;
-        this.height = image.height;
+// class GameObject {
+//     image: HTMLImageElement;
+//     position: Position;
+//     width: number;
+//     height: number;
+//     constructor(image: HTMLImageElement, position: Position) {
+//         this.image = image;
+//         this.position = position;
+//         this.width = image.width;
+//         this.height = image.height;
+//     }
+//     move(speed: number = 1) {
+//         this.position.y += speed; // Mouvement vertical par défaut
+//     }
+// }
+// interface Position {
+//     x: number;
+//     y: number;
+// }
+// // ---------------------------------------------------- //
+// window.onload = main;
+// function main() {
+//     const CANVAS_WIDTH = 900;
+//     const CANVAS_HEIGHT = 500;
+//     const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+//     const context = canvas.getContext("2d")!;
+//     canvas.width = CANVAS_WIDTH;
+//     canvas.height = CANVAS_HEIGHT;
+//     // --- Chargement des images --- //
+//     const alienImg: HTMLImageElement = document.querySelector("img.alien")!;
+//     const playerImg: HTMLImageElement = document.querySelector("img.player")!;
+//     const starImage: HTMLImageElement = document.querySelector("img.star")!;
+//     const groundImg: HTMLImageElement = document.querySelector("img.sol")!;
+//     const missileImg: HTMLImageElement = document.querySelector("img.missile")!;
+//     const ennemiKilled: HTMLImageElement = document.querySelector("ennemi-killed")!;
+//     // --- Variables de jeu --- //
+//     type Direction = -1 | 0 | 1;
+//     let direction: Direction = 0;
+//     let gameOver = false;
+//     const playerPos = {
+//         x: CANVAS_WIDTH / 2 - playerImg.width / 2,
+//         y: CANVAS_HEIGHT - playerImg.height - 20
+//     };
+//     const ground = new GameObject(
+//         groundImg,
+//         { x: 0, y: CANVAS_HEIGHT - groundImg.height + 90 }
+//         // Je ne peux déplacer comme en css il fau faire ici le -50 pour déplacer le sol
+//     );
+//     const aliens: GameObject[] = [];
+//     const missiles: GameObject[] = [];
+//     // Génération initiale d’aliens
+//     const nbAliens = 10;
+//     for (let i = 0; i < nbAliens; i++) {
+//         aliens.push(new GameObject(alienImg, {
+//             x: Math.random() * (CANVAS_WIDTH - alienImg.width),
+//             y: Math.random() * -200
+//         }));
+//     }
+//     // Vies de la Terre
+//     let earthLives = 3;
+//     //vies du joueur
+//     let livesPlayer = 10;
+//     // Il faut en tuer 15 pour gagner
+//     let ennemiSkilledlive = 15;
+//     // --- Boucle de jeu --- //
+//     setInterval(() => {
+//         // Nettoyer le canvas
+//         context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+//         context.fillStyle = "#141414";
+//         context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+//         // Fond étoilé
+//         for (let i = 0; i < 30; i++) {
+//             context.drawImage(
+//                 starImage,
+//                 Math.random() * CANVAS_WIDTH,
+//                 Math.random() * CANVAS_HEIGHT,
+//                 starImage.width,
+//                 starImage.height
+//             );
+//         }
+//         // Sol
+//         context.drawImage(
+//             ground.image,
+//             ground.position.x,
+//             ground.position.y,
+//             ground.image.width,
+//             ground.image.height
+//         );
+//         // Si plus de vies → afficher Game Over
+//         if (livesPlayer <= 0) {
+//             gameOver = true;
+//             context.fillStyle = "white";
+//             context.font = "bold 50px Arial";
+//             context.textAlign = "center";
+//             context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+//             context.font = "24px Arial";
+//             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+//             return; // stoppe l’affichage
+//         }
+//         // Si plus de vie pour la Terre Game over
+//         if (earthLives <= 0) {
+//             gameOver = true;
+//             context.fillStyle = "white";
+//             context.font = "bold 50px Arial";
+//             context.textAlign = "center";
+//             context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+//             context.font = "24px Arial";
+//             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+//             return; // stoppe l’affichage
+//         }
+//         // Si plus de vie des ennemis le joueur gagne
+//         if (ennemiSkilledlive <= 0) {
+//             gameOver = true;
+//             context.fillStyle = "white";
+//             context.font = "bold 50px Arial";
+//             context.textAlign = "center";
+//             context.fillText("🪖  Humans win ! 🪖 ", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
+//             context.font = "24px Arial";
+//             context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
+//             return; // stoppe l’affichage
+//         }
+//         // Aliens
+//         for (let i = aliens.length - 1; i >= 0; i--) {
+//             const alien = aliens[i];
+//             alien.move(1); // Descente des aliens
+//             context.drawImage(
+//                 alien.image,
+//                 alien.position.x,
+//                 alien.position.y,
+//                 alien.image.width,
+//                 alien.image.height
+//             );
+//             // Collision alien ↔ sol
+//             if (alien.position.y + alien.image.height >= ground.position.y) {
+//                 earthLives = Math.max(0, earthLives - 1);
+//                 alien.position.y = -alien.image.height;
+//                 alien.position.x = Math.random() * (CANVAS_WIDTH - alien.image.width);
+//             }
+//             // Collision missile ↔ alien
+//             for (let j = missiles.length - 1; j >= 0; j--) {
+//                 const missile = missiles[j];
+//                 if (isColliding(missile, alien)) {
+//                     // Supprimer le missile et l’alien touché
+//                     missiles.splice(j, 1);
+//                     aliens.splice(i, 1);
+//                     // Recréer un nouvel alien
+//                     aliens.push(new GameObject(alienImg, {
+//                         x: Math.random() * (CANVAS_WIDTH - alienImg.width),
+//                         y: -alienImg.height
+//                     }));
+//                     break;
+//                 }
+//             }
+//         }
+//         // Missiles
+//         for (let i = missiles.length - 1; i >= 0; i--) {
+//             const missile = missiles[i];
+//             missile.position.y -= 8;
+//             context.drawImage(
+//                 missile.image,
+//                 missile.position.x,
+//                 missile.position.y,
+//                 missile.image.width,
+//                 missile.image.height
+//             );
+//             // Supprimer les missiles sortis du haut
+//             if (missile.position.y + missile.image.height < 0) {
+//                 missiles.splice(i, 1);
+//             }
+//         }
+//         // Affichage des vies ("10 ❤️")
+//         context.fillStyle = "white";
+//         context.font = "24px Arial";
+//         context.textAlign = "center";
+//         context.fillText(`${livesPlayer} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
+//         // Affichage des 3 vies de  la Terre ("3 🌍")
+//         context.fillStyle = "white";
+//         context.font = "24px Arial";
+//         context.textAlign = "right";
+//         context.fillText(`${earthLives} 🌍`, 340, 430);
+//              // ennemis killed lives position
+//             //Si 15 ennemis  tués le joueur passe devant le boss ça après
+//         // context.drawImage(
+//         //     ennemiKilled.image,
+//         //     ennemiKilled.position.x,
+//         //     ennemiKilled.position.y,
+//         //     ennemiKilled.image.width,
+//         //     ennemiKilled.image.height
+//         // );
+//         // Affichage des 15 vies des aliens ("15 👽 ")
+//         context.fillStyle = "white";
+//         context.font = "24px Arial";
+//         context.textAlign = "right";
+//         context.fillText(`${ennemiSkilledlive} ennemiKilled`, 100, 70);
+//         // Joueur
+//         playerPos.x += 10 * direction;
+//         playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
+//         context.drawImage(
+//             playerImg,
+//             playerPos.x,
+//             playerPos.y,
+//             playerImg.width,
+//             playerImg.height
+//         );
+//     }, 30);
+//     // --- Gestion des touches --- /
+//     // quand je tire un missile la musique s'active
+//     const shootMusicsound = document.getElementById('shoot-music') as HTMLAudioElement;
+//     function shootMusiques() {
+//         if (shootMusicsound.paused) {
+//             shootMusicsound.currentTime = 0;
+//             shootMusicsound.volume = 0.5;
+//             shootMusicsound.play();
+//         } else {
+//             shootMusicsound.currentTime = 0;
+//         }
+//         document.addEventListener('keydown', shootMusiques);
+//     }
+//     document.addEventListener("keydown", (event) => {
+//         if (gameOver) return; // Bloque le contrôle après game over
+//         switch (event.key) {
+//             case "d":
+//             case "D":
+//                 direction = 1;
+//                 break;
+//             case "q":
+//             case "Q":
+//                 direction = -1;
+//                 break;
+//             case " ":
+//                 // Tirer un missile
+//                 missiles.push(new GameObject(
+//                     missileImg,
+//                     {
+//                         x: playerPos.x + playerImg.width / 2 - missileImg.width / 2,
+//                         y: playerPos.y - missileImg.height
+//                     }
+//                 ));
+//                 shootMusiques();
+//                 break;
+//         }
+//     });
+//     document.addEventListener("keyup", (event) => {
+//         if (["d", "D", "q", "Q"].includes(event.key)) {
+//             direction = 0;
+//         }
+//     });
+// }
+// // --- Détection de collision rectangle --- //
+// function isColliding(a: GameObject, b: GameObject): boolean {
+//     return (
+//         a.position.x < b.position.x + b.width &&
+//         a.position.x + a.width > b.position.x &&
+//         a.position.y < b.position.y + b.height &&
+//         a.position.y + a.height > b.position.y
+//     );
+// }
+class Animal {
+    constructor(name, espece) {
+        this.name = name;
+        this.espece = espece;
     }
-    move(speed = 1) {
-        this.position.y += speed; // Mouvement vertical par défaut
+    info() {
+        console.log(this.name, "est un", this.espece);
+    }
+    crier() {
+        console.log("L'animal crie !");
     }
 }
-// ---------------------------------------------------- //
-window.onload = main;
-function main() {
-    const CANVAS_WIDTH = 900;
-    const CANVAS_HEIGHT = 500;
-    const canvas = document.querySelector("canvas");
-    const context = canvas.getContext("2d");
-    canvas.width = CANVAS_WIDTH;
-    canvas.height = CANVAS_HEIGHT;
-    // --- Chargement des images --- //
-    const alienImg = document.querySelector("img.alien");
-    const playerImg = document.querySelector("img.player");
-    const starImage = document.querySelector("img.star");
-    const groundImg = document.querySelector("img.sol");
-    const missileImg = document.querySelector("img.missile");
-    const ennemiKilled = document.querySelector("ennemi-killed");
-    let direction = 0;
-    let gameOver = false;
-    const playerPos = {
-        x: CANVAS_WIDTH / 2 - playerImg.width / 2,
-        y: CANVAS_HEIGHT - playerImg.height - 20
-    };
-    const ground = new GameObject(groundImg, { x: 0, y: CANVAS_HEIGHT - groundImg.height + 90 }
-    // Je ne peux déplacer comme en css il fau faire ici le -50 pour déplacer le sol
-    );
-    const aliens = [];
-    const missiles = [];
-    // Génération initiale d’aliens
-    const nbAliens = 10;
-    for (let i = 0; i < nbAliens; i++) {
-        aliens.push(new GameObject(alienImg, {
-            x: Math.random() * (CANVAS_WIDTH - alienImg.width),
-            y: Math.random() * -200
-        }));
+class Chat extends Animal {
+    // La classe Chat redéfinit la méthode crier
+    crier() {
+        console.log("Miaou !");
     }
-    // Vies de la Terre
-    let earthLives = 3;
-    //vies du joueur
-    let livesPlayer = 10;
-    // Il faut en tuer 15 pour gagner
-    let ennemiSkilledlive = 15;
-    // --- Boucle de jeu --- //
-    setInterval(() => {
-        // Nettoyer le canvas
-        context.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        context.fillStyle = "#141414";
-        context.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        // Fond étoilé
-        for (let i = 0; i < 30; i++) {
-            context.drawImage(starImage, Math.random() * CANVAS_WIDTH, Math.random() * CANVAS_HEIGHT, starImage.width, starImage.height);
-        }
-        // Sol
-        context.drawImage(ground.image, ground.position.x, ground.position.y, ground.image.width, ground.image.height);
-        // Si plus de vies → afficher Game Over
-        if (livesPlayer <= 0) {
-            gameOver = true;
-            context.fillStyle = "white";
-            context.font = "bold 50px Arial";
-            context.textAlign = "center";
-            context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-            context.font = "24px Arial";
-            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
-            return; // stoppe l’affichage
-        }
-        // Si plus de vie pour la Terre Game over
-        if (earthLives <= 0) {
-            gameOver = true;
-            context.fillStyle = "white";
-            context.font = "bold 50px Arial";
-            context.textAlign = "center";
-            context.fillText("💀 GAME OVER 💀", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-            context.font = "24px Arial";
-            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
-            return; // stoppe l’affichage
-        }
-        // Si plus de vie des ennemis le joueur gagne
-        if (ennemiSkilledlive <= 0) {
-            gameOver = true;
-            context.fillStyle = "white";
-            context.font = "bold 50px Arial";
-            context.textAlign = "center";
-            context.fillText("🪖  Humans win ! 🪖 ", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2);
-            context.font = "24px Arial";
-            context.fillText("Appuie sur F5 pour rejouer", CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2 + 50);
-            return; // stoppe l’affichage
-        }
-        // Aliens
-        for (let i = aliens.length - 1; i >= 0; i--) {
-            const alien = aliens[i];
-            alien.move(1); // Descente des aliens
-            context.drawImage(alien.image, alien.position.x, alien.position.y, alien.image.width, alien.image.height);
-            // Collision alien ↔ sol
-            if (alien.position.y + alien.image.height >= ground.position.y) {
-                earthLives = Math.max(0, earthLives - 1);
-                alien.position.y = -alien.image.height;
-                alien.position.x = Math.random() * (CANVAS_WIDTH - alien.image.width);
-            }
-            // Collision missile ↔ alien
-            for (let j = missiles.length - 1; j >= 0; j--) {
-                const missile = missiles[j];
-                if (isColliding(missile, alien)) {
-                    // Supprimer le missile et l’alien touché
-                    missiles.splice(j, 1);
-                    aliens.splice(i, 1);
-                    // Recréer un nouvel alien
-                    aliens.push(new GameObject(alienImg, {
-                        x: Math.random() * (CANVAS_WIDTH - alienImg.width),
-                        y: -alienImg.height
-                    }));
-                    break;
-                }
-            }
-        }
-        // Missiles
-        for (let i = missiles.length - 1; i >= 0; i--) {
-            const missile = missiles[i];
-            missile.position.y -= 8;
-            context.drawImage(missile.image, missile.position.x, missile.position.y, missile.image.width, missile.image.height);
-            // Supprimer les missiles sortis du haut
-            if (missile.position.y + missile.image.height < 0) {
-                missiles.splice(i, 1);
-            }
-        }
-        // Affichage des vies ("10 ❤️")
-        context.fillStyle = "white";
-        context.font = "24px Arial";
-        context.textAlign = "center";
-        context.fillText(`${livesPlayer} ❤️`, CANVAS_WIDTH / 2, ground.position.y - 20);
-        // Affichage des 3 vies de  la Terre ("3 🌍")
-        context.fillStyle = "white";
-        context.font = "24px Arial";
-        context.textAlign = "right";
-        context.fillText(`${earthLives} 🌍`, 340, 430);
-        // ennemis killed lives position
-        //Si 15 ennemis  tués le joueur passe devant le boss ça après
-        // context.drawImage(
-        //     ennemiKilled.image,
-        //     ennemiKilled.position.x,
-        //     ennemiKilled.position.y,
-        //     ennemiKilled.image.width,
-        //     ennemiKilled.image.height
-        // );
-        // Affichage des 15 vies des aliens ("15 👽 ")
-        context.fillStyle = "white";
-        context.font = "24px Arial";
-        context.textAlign = "right";
-        context.fillText(`${ennemiSkilledlive} ennemiKilled`, 100, 70);
-        // Joueur
-        playerPos.x += 10 * direction;
-        playerPos.x = Math.max(0, Math.min(playerPos.x, CANVAS_WIDTH - playerImg.width));
-        context.drawImage(playerImg, playerPos.x, playerPos.y, playerImg.width, playerImg.height);
-    }, 30);
-    // --- Gestion des touches --- /
-    // quand je tire un missile la musique s'active
-    const shootMusicsound = document.getElementById('shoot-music');
-    function shootMusiques() {
-        if (shootMusicsound.paused) {
-            shootMusicsound.currentTime = 0;
-            shootMusicsound.volume = 0.5;
-            shootMusicsound.play();
-        }
-        else {
-            shootMusicsound.currentTime = 0;
-        }
-        document.addEventListener('keydown', shootMusiques);
+}
+class Chien extends Animal {
+    // La classe Chien redéfinit la méthode crier
+    crier() {
+        console.log("Ouaf !");
     }
-    document.addEventListener("keydown", (event) => {
-        if (gameOver)
-            return; // Bloque le contrôle après game over
-        switch (event.key) {
-            case "d":
-            case "D":
-                direction = 1;
-                break;
-            case "q":
-            case "Q":
-                direction = -1;
-                break;
-            case " ":
-                // Tirer un missile
-                missiles.push(new GameObject(missileImg, {
-                    x: playerPos.x + playerImg.width / 2 - missileImg.width / 2,
-                    y: playerPos.y - missileImg.height
-                }));
-                shootMusiques();
-                break;
-        }
-    });
-    document.addEventListener("keyup", (event) => {
-        if (["d", "D", "q", "Q"].includes(event.key)) {
-            direction = 0;
-        }
-    });
 }
-// --- Détection de collision rectangle --- //
-function isColliding(a, b) {
-    return (a.position.x < b.position.x + b.width &&
-        a.position.x + a.width > b.position.x &&
-        a.position.y < b.position.y + b.height &&
-        a.position.y + a.height > b.position.y);
+const chat = new Chat("Caramel", "Felis silvestris");
+const chien = new Chien("Médor", "Canis lupus");
+const dinosaure = new Animal("Trex", "Tyrannosaurus");
+chat.crier(); // => Miaou !
+chien.crier(); // => Ouaf !
+dinosaure.crier(); // => L'animal crie !
+class Zoo {
+    constructor() {
+        this.animals = [];
+    }
+    addAnimal(newAnimal) {
+        this.animals.push(newAnimal);
+    }
+    showAnimals() {
+        console.log("Bonjour mes petits :)");
+        this.animals.forEach(animal => {
+            animal.crier();
+            animal.info();
+        });
+    }
 }
+const zoo = new Zoo();
+zoo.addAnimal(new Chat("Minette", "Felis silvestris"));
+zoo.addAnimal(new Chien("Patapouf", "Canis lupus"));
+zoo.addAnimal(new Animal("Raptor", "Velociraptor"));
+zoo.showAnimals();
